@@ -1,0 +1,10 @@
+**/.ipynb_checkpoints
+**/__pycache__
+*.png
+*.npy
+*.npz
+*.dae
+data/*
+logs/*
+log/*
+supplyment/logs/*

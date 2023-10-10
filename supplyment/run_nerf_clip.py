@@ -560,11 +560,11 @@ def config_parser():
                         help='frequency of console printout and metric loggin')
     parser.add_argument("--i_img",     type=int, default=200,
                         help='frequency of tensorboard image logging')
-    parser.add_argument("--i_weights", type=int, default=200,
+    parser.add_argument("--i_weights", type=int, default=2000,
                         help='frequency of weight ckpt saving')
-    parser.add_argument("--i_testset", type=int, default=200,
+    parser.add_argument("--i_testset", type=int, default=2000,
                         help='frequency of testset saving')
-    parser.add_argument("--i_video",   type=int, default=200,
+    parser.add_argument("--i_video",   type=int, default=5000,
                         help='frequency of render_poses video saving')
     # clip constrain
     parser.add_argument("--description", type=str, default="A green excavator", help="the text that guides the editing/generation (Or: A photo of a XXX excavator)")
@@ -573,7 +573,7 @@ def config_parser():
     parser.add_argument("--use_feature", action='store_true', help='whether finetune feature layers')
     parser.add_argument("--use_view", action='store_true', help='whether finetune view layers')
     parser.add_argument("--w_clip", type=float, default=1., help='weight for CLIP loss')
-    parser.add_argument("--sample_scale", type=int, default=60, help='sample scale for patch-based samplar')
+    parser.add_argument("--sample_scale", type=int, default=45, help='sample scale for patch-based samplar') #60
     return parser
 
 
@@ -812,6 +812,7 @@ def train():
         optimizer.zero_grad()
 
         img_loss = img2mse(rgb_img_gray, target_img_gray)
+        # img_loss = img2mse(rgb_img, target_img)
         loss = img_loss
         psnr = mse2psnr(img_loss)
 
@@ -820,6 +821,7 @@ def train():
             rgb0_img = rgb0_img.permute(2,0,1).unsqueeze(0)
             rgb0_img_gray = kornia.rgb_to_grayscale(rgb0_img)
             img_loss0 = img2mse(rgb0_img_gray, target_img_gray)
+            # img_loss0 = img2mse(rgb0_img, target_img)
             loss = loss + img_loss0
 
         if args.use_clip:
